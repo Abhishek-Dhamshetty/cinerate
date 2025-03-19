@@ -8,7 +8,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Enable CORS
 app.use(cors({
-  origin: 'http://localhost:5173', // Change this when deploying
+  origin: 'https://cinerate-steel.vercel.app/', // Change this when deploying
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
