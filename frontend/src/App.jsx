@@ -10,7 +10,7 @@ const App = () => {
   const fetchMovies = async () => {
     try {
       const params = selectedIndustry !== "All" ? { industry: selectedIndustry } : {};
-      const response = await axios.get("http://localhost:9000/movie-api/all-movies", { params });
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-api/all-movies`, { params });
 
       console.log("API Response:", response.data); // Debugging log
 

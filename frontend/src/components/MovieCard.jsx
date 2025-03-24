@@ -137,7 +137,7 @@ const MovieCard = ({ movie, style }) => {
             <button
               onClick={async () => {
                 try {
-                  await axios.post("http://localhost:9000/movie-api/rate-movie", {
+                  await axios.post(`${import.meta.env.VITE_BACKEND_URL}/movie-api/rate-movie`, {
                     title: movie.title,
                     rating,
                   });
