@@ -1,19 +1,35 @@
-import React, { useEffect, useState, useContext } from "react";
-import { MovieContext } from "./MovieContext";
-import MovieCard from "../MovieCard";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import MovieCard from './components/MovieCard';
 
 const App = () => {
-  const { movies } = useContext(MovieContext);
+  const [movies, setMovies] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState("All");
-  const [filteredMovies, setFilteredMovies] = useState([]);
+
+  // Function to fetch movies based on selected industry
+  const fetchMovies = async () => {
+    try {
+      const params = selectedIndustry !== "All" ? { industry: selectedIndustry } : {};
+      const response = await axios.get("http://localhost:9000/movie-api/all-movies", { params });
+
+      console.log("API Response:", response.data); // Debugging log
+
+      // Handle different API response formats
+      if (response.data?.movies && Array.isArray(response.data.movies)) {
+        setMovies(response.data.movies);
+      } else {
+        console.error("Unexpected API response format:", response.data);
+        setMovies([]); // Fallback to empty array
+      }
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+      setMovies([]); // Fallback to empty array
+    }
+  };
 
   useEffect(() => {
-    setFilteredMovies(
-      selectedIndustry === "All"
-        ? movies
-        : movies.filter((movie) => movie.industry === selectedIndustry)
-    );
-  }, [selectedIndustry, movies]);
+    fetchMovies(); // Fetch movies when industry changes
+  }, [selectedIndustry]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-10">
@@ -21,7 +37,7 @@ const App = () => {
         CineRate
       </h1>
       <h2 className="text-3xl font-bold text-center mb-6">
-        Latest {selectedIndustry} Movies Reviews
+        Latest Movie Reviews
       </h2>
 
       {/* Industry Filter Dropdown */}
@@ -40,9 +56,13 @@ const App = () => {
 
       {/* Display Movies */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 justify-center">
-        {filteredMovies.length > 0 ? (
-          filteredMovies.map((movie) => (
-            <MovieCard key={movie._id} movie={movie} />
+        {movies.length > 0 ? (
+          movies.map((movie) => (
+            <MovieCard
+              key={movie._id}
+              movie={movie}
+              style={{ width: "300px", minHeight: "420px" }}
+            />
           ))
         ) : (
           <p className="text-center text-gray-400 col-span-full">
