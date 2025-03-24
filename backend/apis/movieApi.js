@@ -14,6 +14,7 @@ router.get("/all-movies", async (req, res) => {
     }
 
     const movies = await Movie.find(filter);
+    console.log("Movies Fetched from DB:", movies);
     res.status(200).json({ success: true, movies });
   } catch (error) {
     console.error("Error fetching movies:", error);
